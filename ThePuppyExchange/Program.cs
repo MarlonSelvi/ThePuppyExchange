@@ -1,7 +1,17 @@
+using BusinessLogicLayer;
+using DataAccessLayer.Data;
+using DataAccessLayer.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<CustomerDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("PuppyExchangeConnectionString")));
+
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 
 var app = builder.Build();
 
