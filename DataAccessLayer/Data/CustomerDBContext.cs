@@ -12,8 +12,13 @@ namespace DataAccessLayer.Data
     public class CustomerDBContext : DbContext
     {
         public CustomerDBContext(DbContextOptions options) : base(options) { }
-        
+
         public DbSet<CustomerModel> Customer { get; set; }
-        }
+
     }
+   
+    }
+    
+        
+
 
