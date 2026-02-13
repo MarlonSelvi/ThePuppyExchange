@@ -1,5 +1,4 @@
-﻿using Azure.Identity;
-using BusinessLogicLayer;
+﻿using BusinessLogicLayer;
 using DataAccessLayer.Data;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -61,7 +60,8 @@ namespace ThePuppyExchange.Controllers
         {
             var customers = await customerDBContext.Customer.ToListAsync();
 
-            foreach (CustomerModel customer in customers) {
+            foreach (CustomerModel customer in customers)
+            {
                 if (customer.email == customerLogin.email && customer.password == customerLogin.password)
                 {
                     customer.cookie = true;
@@ -79,8 +79,8 @@ namespace ThePuppyExchange.Controllers
         {
             var customer = await customerDBContext.Customer.FirstOrDefaultAsync(x => x.id == idCache);
             customer.cookie = false;
-           await customerDBContext.SaveChangesAsync();
-           return RedirectToAction("Home");
+            await customerDBContext.SaveChangesAsync();
+            return RedirectToAction("Home");
         }
 
         public IActionResult Home()
@@ -89,6 +89,7 @@ namespace ThePuppyExchange.Controllers
         }
         public IActionResult Catalog()
         {
+            ViewData["ShowLogout"] = true;
             return View();
         }
     }
