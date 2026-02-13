@@ -8,6 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Adds DB Access for puppy information in remote postgresql database
+builder.Services.AddDbContext<PuppyDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PuppyExchangeConnectionString")));
+
+builder.Services.AddScoped<IPuppyRepository, PuppyRepository>();
+builder.Services.AddScoped<IPuppyService,  PuppyService>();
+
+// Marlon add yo comment here bruh
 builder.Services.AddDbContext<CustomerDBContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PuppyExchangeConnectionString")));
 
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
