@@ -68,7 +68,7 @@ namespace ThePuppyExchange.Controllers
                     idCache = customer.id;
 
                     await customerDBContext.SaveChangesAsync();
-                    return RedirectToAction("Catalog");
+                    return RedirectToAction("Catalog","Puppy");
                 }
             }
             return RedirectToAction("Home");

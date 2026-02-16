@@ -23,5 +23,9 @@ namespace DataAccessLayer.Entities
         public int shelter_id { get; set; }
 
         public bool cookie { get; set; }
+
+        public string description { get; set; }
+
+        public int fee { get; set; }
     }
 }
