@@ -1,0 +1,25 @@
+﻿@model IEnumerable<DataAccessLayer.Entities.PuppyModel>
+
+@{
+    ViewData["Title"] = "Puppy Catalog";
+}
+
+<h1>Puppy Catalog</h1>
+
+@foreach (var puppy in Model)
+
+{
+    <div>
+        <hr />
+
+        <h2>@puppy.name</h2>
+
+        <p><strong>ID:</strong> @puppy.product_id</p>
+        <p><strong>Breed:</strong> @puppy.breed</p>
+        <p><strong>Sex:</strong> @puppy.sex</p>
+        <p><strong>Age:</strong> @puppy.age</p>
+        <p><strong>Shelter ID:</strong> @puppy.shelter_id</p>
+
+
+    </div>
+}
