@@ -14,10 +14,12 @@ namespace ThePuppyExchange.Controllers
         {
             this.puppyDbContext = puppyDbContext;
         }
-        
+
         public async Task<IActionResult> Catalog()
         {
             var puppies = await puppyDbContext.Puppy.ToListAsync();
+            ViewData["ShowLogout"] = true;
+
             return View(puppies);
         }
 
