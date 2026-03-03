@@ -1,5 +1,6 @@
 ﻿using BusinessLogicLayer;
 using DataAccessLayer.Data;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,5 +24,15 @@ namespace ThePuppyExchange.Controllers
             return View(puppies);
         }
 
+        public IActionResult ProductPage(int id)
+        {
+            var puppy = puppyDbContext.Puppy
+                .FirstOrDefault(p => p.product_id == id);
+
+            if (puppy == null)
+                return NotFound();
+
+            return View(puppy);
+        }
     }
 }

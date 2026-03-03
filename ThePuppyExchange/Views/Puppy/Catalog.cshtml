@@ -4,23 +4,38 @@
     ViewData["Title"] = "Puppy Catalog";
 }
 
-<h1>Puppy Catalog</h1>
+<div class="container">
+    <h1 class="mb-4">Puppy Catalog</h1>
 
-@foreach (var puppy in Model)
+    <div class="row">
+        @foreach (var puppy in Model)
+        {
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+                <a asp-controller="Puppy"
+                   asp-action="ProductPage"
+                   asp-route-id="@puppy.product_id"
+                   class="card-link-wrapper">
 
-{
-    <div>
-        <hr />
+                    <div class="card h-100 shadow-sm puppy-card" style="font-size: 0.9rem;">
 
-        <h2>@puppy.name</h2>
+                        <img src="@puppy.profile_pic"
+                             class="card-img-top img-fluid"
+                             alt="@puppy.name"
+                             style="height: 200px; object-fit: cover;" />
 
-        <p><strong>ID:</strong> @puppy.product_id</p>
-        <p><strong>Breed:</strong> @puppy.breed</p>
-        <p><strong>Sex:</strong> @puppy.sex</p>
-        <p><strong>Age:</strong> @puppy.age</p>
-        <p><strong>Shelter ID:</strong> @puppy.shelter_id</p>
-        <p><strong>Desc:</strong> @puppy.description</p>
-        <p><strong>Adoption Fee:</strong> $ @puppy.fee</p>
+                        <div class="card-body d-flex flex-column p-2">
 
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="card-title mb-0">@puppy.name</h5>
+                                <span class="fw-bold text-success">$@puppy.fee</span>
+                            </div>
+
+                            <p class="mb-1"><strong>Breed:</strong> @puppy.breed</p>
+
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
     </div>
-}
+</div>

@@ -20,3 +20,18 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.card-link-wrapper {
+    text-decoration: none;
+    color: inherit;
+}
+
+.puppy-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+}
+
+.puppy-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
