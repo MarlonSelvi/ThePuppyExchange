@@ -27,5 +27,7 @@ namespace DataAccessLayer.Entities
         public string description { get; set; }
 
         public int fee { get; set; }
+
+        public string profile_pic { get; set; }
     }
 }
