@@ -1,0 +1,64 @@
+﻿@model DataAccessLayer.Entities.PuppyModel
+
+@{
+    ViewData["Title"] = Model.name;
+}
+
+<div class="container py-5">
+
+    <div class="row g-5">
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <img src="@Model.profile_pic"
+                     alt="@Model.name"
+                     class="img-fluid rounded"
+                     style="width:100%; object-fit: cover;">
+            </div>
+        </div>
+
+        <div class="col-md-6 d-flex flex-column">
+
+            <h1 class="mb-3">@Model.name</h1>
+
+            <h3 class="text-success mb-4">$@Model.fee</h3>
+
+            <div class="mb-3">
+                <p style ="font-size: 20px;"><strong>Breed:</strong> @Model.breed</p>
+                <p style ="font-size: 20px;"><strong>Sex:</strong> @Model.sex</p>
+                <p style="font-size: 20px;"><strong>Age:</strong> @Model.age</p>
+            </div>
+
+            <div class="mb-4">
+                <h4><strong>About @Model.name</strong></h4>
+                <p style ="font-size: 20px;">@Model.description</p>
+            </div>
+
+            <div class="mt-auto">
+
+                <form asp-controller="Cart"
+                      asp-action="AddToCart"
+                      method="post">
+
+                    <input type="hidden"
+                           name="puppyId"
+                           value="@Model.product_id" />
+
+                    <button type="submit"
+                            class="btn btn-primary btn-lg w-100 mb-2">
+                        Add to Cart
+                    </button>
+                </form>
+
+                <a asp-controller="Puppy"
+                   asp-action="Catalog"
+                   class="btn btn-outline-secondary w-100">
+                    ← Back to Catalog
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
