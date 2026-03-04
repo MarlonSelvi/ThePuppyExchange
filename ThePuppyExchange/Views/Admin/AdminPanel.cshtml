@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Puppy Exchange - Admin Panel</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <style>
+        /* This is the primary pale, warm yellow from the header image */
+        :root {
+            --puppy-navbar-bg: #f4edd3; /* Extracted color */
+            --puppy-card-bg: #ebebeb; /* The light grey card color */
+            --puppy-logo-gold: #a3965d; /* Darker gold/olive from the logo graphic */
+        }
+
+        /* Set the overall page background and text color to a soft dark grey for better readability */
+        body {
+            background-color: #fff;
+            color: #333;
+        }
+
+
+        /* Card-button styling for the 5 key sections */
+        .puppy-card-btn {
+            background-color: var(--puppy-card-bg);
+            border: none;
+            border-radius: 12px; /* Smooth rounded corners */
+            cursor: pointer;
+            width: 100%;
+            display: block; /* Makes the entire card clickable */
+            text-align: left;
+            padding: 2.5rem; /* Large padding as requested in design */
+        }
+
+            /* Give the cards a subtle 'pop' on hover and press */
+            .puppy-card-btn:hover {
+                background-color: #f1f1f1;
+            }
+
+        /* Text styling inside the card */
+        .puppy-card-title {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+    </style>
+</head>
+<body>
+
+    <main class="container py-4">
+
+        <h1 class="text-center dashboard-title h2">Admin Dashboard</h1>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <a class="puppy-card-btn">
+                    <div class="card-body">
+                        <h2 class="card-title puppy-card-title">Dog Statistics</h2>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a class="puppy-card-btn" style="text-decoration: none;" asp-controller="Admin" asp-action="AlterDB">
+                    <div class="card-body">
+                        <h2 class="card-title puppy-card-title">Add or Edit Puppy</h2>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a class="puppy-card-btn">
+                    <div class="card-body">
+                        <h2 class="card-title puppy-card-title">Shelter Operations</h2>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-6">
+                <a class="puppy-card-btn">
+                    <div class="card-body">
+                        <h2 class="card-title puppy-card-title">Survey Statistics</h2>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-6">
+                <a class="puppy-card-btn">
+                    <div class="card-body">
+                        <h2 class="card-title puppy-card-title">Reviews</h2>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+</body>
+</html>

@@ -1,10 +1,5 @@
 ﻿using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccessLayer.Data
 {
@@ -14,6 +9,8 @@ namespace DataAccessLayer.Data
         : base(options) { }
 
         public DbSet<PuppyModel> Puppy { get; set; }
+        public DbSet<CartModel> Cart { get; set; }
+
 
     }
 }

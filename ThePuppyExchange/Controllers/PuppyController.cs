@@ -1,6 +1,5 @@
 ﻿using BusinessLogicLayer;
 using DataAccessLayer.Data;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,14 +17,16 @@ namespace ThePuppyExchange.Controllers
 
         public async Task<IActionResult> Catalog()
         {
-            var puppies = await puppyDbContext.Puppy.ToListAsync();
             ViewData["ShowLogout"] = true;
+            var puppies = await puppyDbContext.Puppy.ToListAsync();
 
             return View(puppies);
         }
 
         public IActionResult ProductPage(int id)
         {
+            ViewData["ShowLogout"] = true;
+
             var puppy = puppyDbContext.Puppy
                 .FirstOrDefault(p => p.product_id == id);
 

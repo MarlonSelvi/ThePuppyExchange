@@ -7,42 +7,147 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ThePuppyExchange.styles.css" asp-append-version="true" />
+    <style>
+        /* Root Variables */
+        :root {
+            --puppy-navbar-bg: #f4edd3;
+            --puppy-card-bg: #ebebeb;
+            --puppy-logo-gold: #a3965d;
+        }
+
+        /* Body */
+        body {
+            background-color: #fff;
+            color: #333;
+        }
+
+        /* Navbar */
+        .puppy-navbar {
+            background-color: var(--puppy-navbar-bg);
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        /* Logo */
+        .puppy-logo-graphic {
+            filter: drop-shadow(1px 1px 2px rgba(163, 150, 93, 0.5));
+            max-height: 50px;
+        }
+
+        /* Nav Title */
+        .puppy-nav-title {
+            color: #333;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.75rem;
+            font-weight: 500;
+        }
+
+        /* Nav Links */
+        .navbar-nav .nav-link {
+            color: #333;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.25rem;
+            margin-right: 1.5rem;
+            transition: color 0.3s;
+        }
+
+            /* Active Nav Link */
+            .navbar-nav .nav-link.active {
+                color: var(--puppy-logo-gold) !important;
+                font-weight: bold;
+            }
+
+        /* Profile Icon */
+        .puppy-profile-icon {
+            border-radius: 50%;
+            height: 40px;
+            width: 40px;
+            object-fit: cover;
+            opacity: 0.7;
+        }
+
+        /* Dashboard Title */
+        .dashboard-title {
+            margin-top: 4rem;
+            margin-bottom: 4rem;
+            color: #333;
+            font-weight: 700;
+        }
+
+        /* Focus/Active Reset */
+        .no-click-outline:focus,
+        .no-click-outline:active {
+            outline: none !important;
+            box-shadow: none !important;
+            border-color: transparent !important;
+        }
+
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">The Puppy Exchange</a>
+        <nav class="navbar navbar-expand-lg puppy-navbar py-3 mb-3">
+            <div class="container-fluid px-5">
+
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/path/to/your/logo_graphic.png" alt="Puppy Exchange Logo" class="puppy-logo-graphic me-2">
+                </a>
+
+                <div class="d-none d-lg-flex flex-grow-1 justify-content-center position-absolute w-100" style="left: 0; z-index: -1;">
+                    <span class="puppy-nav-title">The Puppy Exchange</span>
+                </div>
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        @if (ViewData["ShowLogout"] as bool? == true)
-                        {
-                            <li class="nav-item ms-auto">
-                                <form asp-action="Logout" asp-controller="Customer" method="post">
-                                    <button type="submit" class="btn btn-link nav-link text-dark">
+
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
+
+                    @if (Context.Session.GetString("CustomerId") != null)
+                    {
+                        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Survey</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Puppy" asp-action="Catalog">Puppies</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Customer" asp-action="Cart">Cart</a></li>
+                            @if (Context.Session.GetString("IsAdmin") == "true")
+                            {
+                                <li class="nav-item d-flex align-items-center">
+                                    <a class="nav-link text-dark" asp-controller="Admin" asp-action="AdminPanel">Admin Dashboard</a>
+                                </li>
+                            }
+                        </ul>
+
+                        <ul class="navbar-nav alignself">
+                            <li class="nav-item d-flex align-items-center">
+                                <form asp-action="Logout" asp-controller="Customer" method="post" class="m-0">
+                                    <button type="submit" class="btn btn-link nav-link text-dark no-click-outline" style="text-decoration: none; ">
                                         Logout
                                     </button>
                                 </form>
                             </li>
-                           
-                        }
-                        else
-                        {
-                            <li class="nav-item ms-auto">
+                            <li class="nav-item d-flex align-items-center ms-3">
+                                <a href="#" class="navbar-profile-link">
+                                    <img src="~/path/to/your/profile_icon.png" alt="Profile Icon" class="puppy-profile-icon">
+                                </a>
+                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="navbar-nav ms-auto">
+
+                            <li class="nav-item d-flex align-items-end">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Customer" asp-action="Login">Login</a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item d-flex align-items-center">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Customer" asp-action="Registration">Register</a>
                             </li>
-                
-                        }
-                       
-                    </ul>
+                        </ul>
+
+                    }
                 </div>
+
             </div>
         </nav>
     </header>
