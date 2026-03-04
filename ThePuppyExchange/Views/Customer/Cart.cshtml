@@ -1,0 +1,67 @@
+﻿@model List<DataAccessLayer.Entities.CartModel>
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+<div class="container py-5">
+
+    <h1 class="mb-4" style="font-family: 'Times New Roman', Times, serif;">Shopping Cart</h1>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="alert alert-warning text-center">
+            Your cart is empty.
+        </div>
+        <a asp-controller="Puppy" asp-action="Catalog" class="btn btn-outline-secondary">← Back to Catalog</a>
+    }
+    else
+    {
+        <table class="table table-bordered align-middle">
+            <thead style="background-color: #f4edd3;">
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Breed</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="width: 100px;">
+                            <img src="@item.profile_pic"
+                                 alt="@item.name"
+                                 class="img-fluid rounded"
+                                 style="height: 70px; width: 70px; object-fit: cover;" />
+                        </td>
+                        <td>@item.name</td>
+                        <td>@item.breed</td>
+                        <td class="text-success fw-bold">$@item.fee</td>
+                        <td>@item.quantity</td>
+                        <td class="text-center">
+                            <form asp-controller="Customer"
+                                  asp-action="RemoveFromCart"
+                                  method="post">
+                                <input type="hidden" name="cartId" value="@item.id" />
+                                <button type="submit" class="btn btn-outline-danger">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <a asp-controller="Puppy" asp-action="Catalog" class="btn btn-outline-secondary">← Back to Catalog</a>
+            <div>
+                <span class="fs-4 fw-bold me-3">Total: $@Model.Sum(i => i.fee * i.quantity)</span>
+                <a asp-controller="Cart" asp-action="Checkout" class="btn btn-lg" style="background-color: #a3965d; color: #fff;">Checkout</a>
+            </div>
+        </div>
+    }
+
+</div>

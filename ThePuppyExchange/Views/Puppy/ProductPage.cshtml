@@ -36,8 +36,9 @@
 
             <div class="mt-auto">
 
-                <form asp-controller="Cart"
+                <form asp-controller="Customer"
                       asp-action="AddToCart"
+                      asp-route-id="@Model.product_id"
                       method="post">
 
                     <input type="hidden"

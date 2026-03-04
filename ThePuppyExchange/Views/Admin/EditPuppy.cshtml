@@ -1,0 +1,90 @@
+﻿@model DataAccessLayer.Entities.PuppyModel
+
+@{
+    ViewData["Title"] = "Edit " + Model.name;
+}
+
+<div class="container py-5">
+
+    <form asp-controller="Admin"
+          asp-action="AlterPuppy"
+          method="post">
+
+        <input type="hidden" name="product_id" value="@Model.product_id" />
+
+        <div class="row g-5">
+
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <img src="@Model.profile_pic"
+                         alt="@Model.name"
+                         class="img-fluid rounded"
+                         style="width:100%; object-fit: cover;">
+                    <div class="card-body">
+                        <label><strong>Profile Picture URL</strong></label>
+                        <input type="text" name="profile_pic" value="@Model.profile_pic" class="form-control" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 d-flex flex-column">
+
+                <div class="mb-3">
+                    <label><strong>Name</strong></label>
+                    <input type="text" name="name" value="@Model.name" class="form-control form-control-lg" />
+                </div>
+
+                <div class="mb-4">
+                    <label><strong>Price ($)</strong></label>
+                    <input type="number" name="fee" value="@Model.fee" class="form-control" step="0.01" />
+                </div>
+
+                <div class="mb-3">
+                    <label><strong>Breed</strong></label>
+                    <input type="text" name="breed" value="@Model.breed" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label><strong>Sex</strong></label>
+                    <input type="text" name="sex" value="@Model.sex" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label><strong>Age</strong></label>
+                    <input type="text" name="age" value="@Model.age" class="form-control" />
+                </div>
+
+                <div class="mb-4">
+                    <label><strong>Description</strong></label>
+                    <textarea name="description" class="form-control" rows="4">@Model.description</textarea>
+                </div>
+
+                <div class="mt-auto">
+
+                    <button type="submit"
+                            class="btn btn-primary btn-lg w-100 mb-2">
+                        Alter
+                    </button>
+
+                    <a asp-controller="Admin"
+                       asp-action="DeletePuppy"
+                       asp-route-id="@Model.product_id"
+                       class="btn btn-warning btn-lg w-100 mb-2">
+                        Delete Puppy
+                    </a>
+
+
+                    <a asp-controller="Admin"
+                       asp-action="AlterDB"
+                       class="btn btn-outline-secondary w-100">
+                        ← Back to Catalog
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+
+</div>
