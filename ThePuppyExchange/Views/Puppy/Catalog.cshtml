@@ -2,13 +2,49 @@
 
 @{
     ViewData["Title"] = "Puppy Catalog";
+
+    var breeds = ViewData["Breeds"] as List<string>;
+
+    var sexes = ViewData["Sexes"] as List<string>;
+
+    var selectedBreed = ViewData["SelectedBreed"]?.ToString();
+
+    var selectedSex = ViewData["SelectedSex"]?.ToString();
 }
 
 <div class="container">
     <h1 class="mb-4">Puppy Catalog</h1>
 
+    <!-- Filter dropdown is here, needs further testing to check for possible bugs-->
+    <form method="get" class="mb-4">
+        <div class="row">
+            <div class="col-md-4">
+                <label class="form-label"><strong>Filter by Breed:</strong></label>
+                <select name="selectedBreed" class="form-control" onchange="this.form.submit()">
+                    <option value="">All</option>
+                    @foreach (var breed in breeds)
+
+                    {
+                        <option value="@breed" selected="@(breed == selectedBreed ? "selected" : null)">
+                            @breed
+                        </option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label"><strong>Filter by Sex:</strong></label>
+                <select name="selectedSex" class="form-control" onchange="this.form.submit()">
+                    <option value="">All</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                </select>
+            </div>
+        </div>
+    </form>
+
     <div class="row">
         @foreach (var puppy in Model)
+
         {
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
                 <a asp-controller="Puppy"
