@@ -4,30 +4,154 @@
     ViewData["Title"] = "Login";
 }
 
-<h1>Log In</h1>
+<style>
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 75vh;
+    }
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
+    .login-card {
+        background-color: var(--puppy-card-bg);
+        border-radius: 16px;
+        padding: 2.5rem;
+        max-width: 420px;
+        width: 100%;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+        .login-card h2 {
+            font-family: 'Times New Roman', Times, serif;
+            color: #333;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.25rem;
+        }
+
+    .login-subtitle {
+        text-align: center;
+        color: #888;
+        font-size: 0.95rem;
+        margin-bottom: 1.75rem;
+    }
+
+    .login-puppy-icon {
+        display: block;
+        margin: 0 auto 1rem auto;
+        font-size: 3rem;
+        color: var(--puppy-logo-gold);
+        text-align: center;
+    }
+
+    .login-card .form-control {
+        border-radius: 10px;
+        border: 1px solid #d4d0c2;
+        padding: 0.65rem 1rem;
+        font-size: 0.95rem;
+    }
+
+        .login-card .form-control:focus {
+            border-color: var(--puppy-logo-gold);
+            box-shadow: 0 0 0 0.2rem rgba(163, 150, 93, 0.2);
+        }
+
+    .login-card label {
+        font-family: 'Times New Roman', Times, serif;
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+    }
+
+    .btn-puppy {
+        background-color: var(--puppy-logo-gold);
+        border: none;
+        color: #fff;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 0.6rem;
+        width: 100%;
+        transition: background-color 0.3s;
+    }
+
+        .btn-puppy:hover {
+            background-color: #8a7e4e;
+            color: #fff;
+        }
+
+    .login-footer {
+        text-align: center;
+        margin-top: 1.25rem;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+        .login-footer a {
+            color: var(--puppy-logo-gold);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+            .login-footer a:hover {
+                text-decoration: underline;
+            }
+
+    .login-paw {
+        color: var(--puppy-logo-gold);
+        font-size: 1rem;
+    }
+</style>
+
+<div class="login-wrapper">
+    <div class="login-card">
+        <div class="login-puppy-icon">
+        </div>
+        <h2>Welcome Back</h2>
+
         <form asp-action="Login">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
-            <div class="form-group">
-                <label asp-for="email" class="control-label">Email</label>
-                <input asp-for="email" class="form-control" placeholder="email@domain.com"/>
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="email" class="form-label">Email</label>
+                <input asp-for="email" class="form-control" placeholder="email@domain.com" />
                 <span asp-validation-for="email" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="password" class="control-label">Password</label>
-                <input asp-for="password" class="form-control" placeholder="**********" />
+
+            <div class="mb-3">
+                <label asp-for="password" class="form-label">Password</label>
+                <div class="position-relative">
+                    <input asp-for="password" type="password" class="form-control pe-5" placeholder="••••••••••" autocomplete="new-password" />
+                    <button type="button" class="btn position-absolute top-50 end-0 translate-middle-y me-2 p-0 border-0 bg-transparent"
+                            onclick="togglePassword(this)" tabindex="-1">
+                        <i class="bi bi-eye" style="font-size: 1.2rem; color: #888;"></i>
+                    </button>
+                </div>
                 <span asp-validation-for="password" class="text-danger"></span>
             </div>
-           
-            <div class="form-group">
-                <input type="submit" value="Log In" class="btn btn-primary" />
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-puppy">Log In</button>
             </div>
         </form>
+
+        <div class="login-footer">
+            Don't have an account? <a asp-controller="Customer" asp-action="Registration">Register here</a>
+        </div>
     </div>
 </div>
 
-
+<script>
+    function togglePassword(btn) {
+        var input = btn.previousElementSibling;
+        var icon = btn.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('bi-eye', 'bi-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.replace('bi-eye-slash', 'bi-eye');
+        }
+    }
+</script>
