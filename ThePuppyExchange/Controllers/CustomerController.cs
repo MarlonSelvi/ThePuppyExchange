@@ -76,6 +76,7 @@ namespace ThePuppyExchange.Controllers
 
                     // Save to session
                     HttpContext.Session.SetInt32("CustomerId", customer.id);
+                    HttpContext.Session.SetString("CustomerName", customer.fname);
 
                     UserPrivilegeModel user = await privilegeDBContext.AccountPrivileges.FirstOrDefaultAsync(x => x.customer_Id == customer.id);
                     if (user == null)
