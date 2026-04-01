@@ -120,10 +120,13 @@
 
                         <ul class="navbar-nav">
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle no-caret" href="#" role="button"
+                                <a class="nav-link dropdown-toggle no-click-outline d-flex align-items-center" href="#" role="button"
                                    data-bs-toggle="dropdown" aria-expanded="false"
                                    id="profileDropdown">
-                                    <i class="bi bi-person-circle" style="font-size: 2.2rem; color: #888;"></i>
+                                    <i class="bi bi-person-circle me-2" style="font-size: 2.2rem; color: #888;"></i>
+                                    <span style="font-family: 'Times New Roman', Times, serif; font-size: 1.1rem; color: #333; font-weight: 600;">
+                                        @Context.Session.GetString("CustomerName")
+                                    </span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="profileDropdown">
 
