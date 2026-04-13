@@ -67,6 +67,14 @@
                             </div>
 
                             <p class="mb-1"><strong>Breed:</strong> @puppy.breed</p>
+                            @if (puppy.quantity > 0)
+                            {
+                                <p class="mb-1 text-success"><strong>In Stock:</strong> @puppy.quantity</p>
+                            }
+                            else
+                            {
+                                <p class="mb-1 text-danger"><strong>Out of Stock</strong></p>
+                            }
 
                         </div>
                     </div>

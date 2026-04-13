@@ -1,0 +1,68 @@
+﻿@model List<DataAccessLayer.Entities.OrderHistoryViewModel>
+
+@{
+    ViewData["Title"] = "Order History";
+}
+
+<div class="container py-5">
+
+    <h1 class="mb-4" style="font-family: 'Times New Roman', Times, serif;">Order History</h1>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="alert alert-warning text-center">
+            You have no past orders.
+        </div>
+        <a asp-controller="Puppy" asp-action="Catalog" class="btn btn-outline-secondary">← Back to Catalog</a>
+    }
+    else
+    {
+        @foreach (var order in Model)
+        {
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header d-flex justify-content-between" style="background-color: #f4edd3;">
+                    <span><strong>Order #@order.order_id</strong></span>
+                    <span><strong>Date:</strong> @order.date.ToString("MMMM dd, yyyy")</span>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-bordered align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Breed</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in order.items)
+                            {
+                                <tr>
+                                    <td style="width: 100px;">
+                                        <img src="@item.profile_pic"
+                                             alt="@item.name"
+                                             class="img-fluid rounded"
+                                             style="height: 70px; width: 70px; object-fit: cover;" />
+                                    </td>
+                                    <td>@item.name</td>
+                                    <td>@item.breed</td>
+                                    <td class="text-success fw-bold">$@item.fee</td>
+                                    <td>@item.quantity</td>
+                                    <td class="fw-bold">$@(item.fee * item.quantity)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer text-end">
+                    <span class="fs-5 fw-bold">Total: $@order.total</span>
+                </div>
+            </div>
+        }
+
+        <a asp-controller="Puppy" asp-action="Catalog" class="btn btn-outline-secondary">← Back to Catalog</a>
+    }
+
+</div>
