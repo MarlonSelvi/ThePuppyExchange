@@ -22,6 +22,9 @@ namespace DataAccessLayer.Entities
         public decimal fee { get; set; }
         [NotMapped]
         public string profile_pic { get; set; }
+
+        [NotMapped]
+        public int maxQuantity { get; set; }
     }
 
 }
