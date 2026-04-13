@@ -59,7 +59,7 @@
             <a asp-controller="Puppy" asp-action="Catalog" class="btn btn-outline-secondary">← Back to Catalog</a>
             <div>
                 <span class="fs-4 fw-bold me-3">Total: $@Model.Sum(i => i.fee * i.quantity)</span>
-                <a asp-controller="Cart" asp-action="Checkout" class="btn btn-lg" style="background-color: #a3965d; color: #fff;">Checkout</a>
+                <a asp-controller="Customer" asp-action="Checkout" class="btn btn-lg" style="background-color: #a3965d; color: #fff;">Checkout</a>
             </div>
         </div>
     }

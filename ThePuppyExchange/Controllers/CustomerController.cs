@@ -3,6 +3,7 @@ using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using ThePuppyExchange.Models;
 
 
 namespace ThePuppyExchange.Controllers
@@ -167,6 +168,34 @@ namespace ThePuppyExchange.Controllers
             }
 
             return RedirectToAction("Cart");
+        }
+
+        public IActionResult Checkout()
+        {
+            int? customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            var cartItems = (from cart in puppyDbContext.Cart
+                             join puppy in puppyDbContext.Puppy
+                             on cart.product_id equals puppy.product_id
+                             where cart.customer_id == customerId
+                             select new Checkout
+                             {
+                                 id = cart.id,
+                                 product_id = cart.product_id,
+                                 quantity = cart.quantity,
+
+                                 name = puppy.name,
+                                 breed = puppy.breed,
+                                 fee = puppy.fee,
+                                 profile_pic = puppy.profile_pic
+                             }).ToList();
+
+            if (!cartItems.Any())
+            {
+                return RedirectToAction("Cart");
+            }
+
+            return View(cartItems);
         }
     }
 }
