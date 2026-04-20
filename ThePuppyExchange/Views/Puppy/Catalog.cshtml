@@ -35,8 +35,8 @@
                 <label class="form-label"><strong>Filter by Sex:</strong></label>
                 <select name="selectedSex" class="form-control" onchange="this.form.submit()">
                     <option value="">All</option>
-                    <option value="M">Male</option>
-                    <option value="F">Female</option>
+                    <option value="M" selected="@(selectedSex == "M" ? "selected" : null)">Male</option>
+                    <option value="F" selected="@(selectedSex == "F" ? "selected" : null)">Female</option>
                 </select>
             </div>
         </div>
