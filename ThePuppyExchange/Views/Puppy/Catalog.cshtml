@@ -35,8 +35,8 @@
                 <label class="form-label"><strong>Filter by Sex:</strong></label>
                 <select name="selectedSex" class="form-control" onchange="this.form.submit()">
                     <option value="">All</option>
-                    <option value="M">Male</option>
-                    <option value="F">Female</option>
+                    <option value="M" selected="@(selectedSex == "M" ? "selected" : null)">Male</option>
+                    <option value="F" selected="@(selectedSex == "F" ? "selected" : null)">Female</option>
                 </select>
             </div>
         </div>
@@ -67,6 +67,14 @@
                             </div>
 
                             <p class="mb-1"><strong>Breed:</strong> @puppy.breed</p>
+                            @if (puppy.quantity > 0)
+                            {
+                                <p class="mb-1 text-success"><strong>In Stock:</strong> @puppy.quantity</p>
+                            }
+                            else
+                            {
+                                <p class="mb-1 text-danger"><strong>Out of Stock</strong></p>
+                            }
 
                         </div>
                     </div>

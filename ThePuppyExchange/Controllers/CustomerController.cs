@@ -3,6 +3,7 @@ using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using ThePuppyExchange.Models;
 
 
 namespace ThePuppyExchange.Controllers
@@ -122,23 +123,51 @@ namespace ThePuppyExchange.Controllers
             }
 
             var cartItems = await (
-                from c in puppyDbContext.Cart
-                join p in puppyDbContext.Puppy on c.product_id equals p.product_id
-                where c.customer_id == customerId
-                select new CartModel
-                {
-                    id = c.id,
-                    customer_id = c.customer_id,
-                    product_id = c.product_id,
-                    quantity = c.quantity,
-                    name = p.name,
-                    breed = p.breed,
-                    fee = p.fee,
-                    profile_pic = p.profile_pic
-                }
-            ).ToListAsync();
+             from c in puppyDbContext.Cart
+             join p in puppyDbContext.Puppy on c.product_id equals p.product_id
+             where c.customer_id == customerId
+             select new CartModel
+             {
+                 id = c.id,
+                 customer_id = c.customer_id,
+                 product_id = c.product_id,
+                 quantity = c.quantity,
+                 name = p.name,
+                 breed = p.breed,
+                 fee = p.fee,
+                 profile_pic = p.profile_pic,
+                 maxQuantity = p.quantity
+             }
+         ).ToListAsync();
 
             return View(cartItems);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCartQuantity(int cartId, int newQuantity)
+        {
+            var cartItem = await puppyDbContext.Cart.FirstOrDefaultAsync(c => c.id == cartId);
+            if (cartItem == null)
+            {
+                return RedirectToAction("Cart");
+            }
+
+            // Get the max quantity from the puppy table
+            var puppy = await puppyDbContext.Puppy.FirstOrDefaultAsync(p => p.product_id == cartItem.product_id);
+            if (puppy == null)
+            {
+                return RedirectToAction("Cart");
+            }
+
+            //Between 1 and the puppy's available quantity
+            if (newQuantity < 1) newQuantity = 1;
+            if (newQuantity > puppy.quantity) newQuantity = puppy.quantity;
+
+            cartItem.quantity = newQuantity;
+            puppyDbContext.Cart.Update(cartItem);
+            await puppyDbContext.SaveChangesAsync();
+
+            return RedirectToAction("Cart");
         }
 
         public IActionResult AddToCart(int puppyId)
@@ -167,6 +196,155 @@ namespace ThePuppyExchange.Controllers
             }
 
             return RedirectToAction("Cart");
+        }
+
+        public IActionResult Checkout()
+        {
+            int? customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            var cartItems = (from cart in puppyDbContext.Cart
+                             join puppy in puppyDbContext.Puppy
+                             on cart.product_id equals puppy.product_id
+                             where cart.customer_id == customerId
+                             select new Checkout
+                             {
+                                 id = cart.id,
+                                 product_id = cart.product_id,
+                                 quantity = cart.quantity,
+
+                                 name = puppy.name,
+                                 breed = puppy.breed,
+                                 fee = puppy.fee,
+                                 profile_pic = puppy.profile_pic
+                             }).ToList();
+
+            if (!cartItems.Any())
+            {
+                return RedirectToAction("Cart");
+            }
+
+            return View(cartItems);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> PlaceOrder()
+        {
+            int? customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
+            {
+                return RedirectToAction("Login", "Customer");
+            }
+
+            // Get cart items
+            var cartItems = await puppyDbContext.Cart
+                .Where(c => c.customer_id == customerId)
+                .ToListAsync();
+
+            if (cartItems == null || cartItems.Count == 0)
+            {
+                return RedirectToAction("Cart");
+            }
+
+            // Create order
+            var order = new OrderModel
+            {
+                customer_id = customerId.Value,
+                date = DateTime.UtcNow
+            };
+
+            puppyDbContext.Order.Add(order);
+            await puppyDbContext.SaveChangesAsync();
+
+            // Create order items & reduce puppy quantity
+            foreach (var cartItem in cartItems)
+            {
+                var orderItem = new OrderItemModel
+                {
+                    order_id = order.id,
+                    product_id = cartItem.product_id,
+                    quantity = cartItem.quantity
+                };
+
+                puppyDbContext.OrderItems.Add(orderItem);
+
+                var puppy = await puppyDbContext.Puppy.FirstOrDefaultAsync(p => p.product_id == cartItem.product_id);
+                if (puppy != null)
+                {
+                    puppy.quantity -= cartItem.quantity;
+                    if (puppy.quantity < 0) puppy.quantity = 0;
+                }
+            }
+
+            // Clear the cart
+            puppyDbContext.Cart.RemoveRange(cartItems);
+
+            await puppyDbContext.SaveChangesAsync();
+
+            return RedirectToAction("OrderConfirmation", new { orderId = order.id });
+        }
+
+        public async Task<IActionResult> OrderConfirmation(int orderId)
+        {
+            var order = await puppyDbContext.Order.FirstOrDefaultAsync(o => o.id == orderId);
+
+            if (order == null)
+                return NotFound();
+
+            return View(order);
+        }
+
+        public async Task<IActionResult> OrderHistory()
+        {
+            int? customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
+            {
+                return RedirectToAction("Login", "Customer");
+            }
+
+            // Get previous orders
+            var orders = await puppyDbContext.Order
+                .Where(o => o.customer_id == customerId)
+                .OrderByDescending(o => o.date)
+                .ToListAsync();
+
+            // Get all puppy info
+            var orderItems = await (
+                from oi in puppyDbContext.OrderItems
+                join p in puppyDbContext.Puppy on oi.product_id equals p.product_id
+                join o in puppyDbContext.Order on oi.order_id equals o.id
+                where o.customer_id == customerId
+                select new
+                {
+                    oi.order_id,
+                    oi.quantity,
+                    p.name,
+                    p.breed,
+                    p.fee,
+                    p.profile_pic
+                }
+            ).ToListAsync();
+
+            // Group orders
+            var orderHistory = orders.Select(o => new OrderHistoryViewModel
+            {
+                order_id = o.id,
+                date = o.date,
+                items = orderItems
+                    .Where(oi => oi.order_id == o.id)
+                    .Select(oi => new OrderHistoryItemViewModel
+                    {
+                        name = oi.name,
+                        breed = oi.breed,
+                        fee = oi.fee,
+                        quantity = oi.quantity,
+                        profile_pic = oi.profile_pic
+                    }).ToList()
+            }).ToList();
+
+            return View(orderHistory);
         }
     }
 }
