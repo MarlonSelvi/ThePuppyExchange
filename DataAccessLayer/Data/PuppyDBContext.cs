@@ -10,7 +10,7 @@ namespace DataAccessLayer.Data
 
         public DbSet<PuppyModel> Puppy { get; set; }
         public DbSet<CartModel> Cart { get; set; }
-
-
+        public DbSet<OrderModel> Order { get; set; }
+        public DbSet<OrderItemModel> OrderItems { get; set; }
     }
 }

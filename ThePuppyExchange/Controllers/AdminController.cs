@@ -67,6 +67,7 @@ namespace ThePuppyExchange.Controllers
                 puppyToAlter.sex = puppy.sex;
                 puppyToAlter.description = puppy.description;
                 puppyToAlter.profile_pic = puppy.profile_pic;
+                puppyToAlter.quantity = puppy.quantity;
             }
             puppyDbContext.SaveChanges();
 
@@ -83,7 +84,6 @@ namespace ThePuppyExchange.Controllers
         [HttpPost]
         public IActionResult AddPuppy(PuppyModel puppy)
         {
-
             puppy.shelter_id = 1;
             puppyDbContext.Puppy.Add(puppy);
             puppyDbContext.SaveChanges();

@@ -41,7 +41,44 @@
                         <td>@item.name</td>
                         <td>@item.breed</td>
                         <td class="text-success fw-bold">$@item.fee</td>
-                        <td>@item.quantity</td>
+                        <td>
+                            <div class="d-flex align-items-center justify-content-center gap-1">
+                               @*  Down arrow - decrease quantity  *@
+                                <form asp-controller="Customer"
+                                      asp-action="UpdateCartQuantity"
+                                      method="post"
+                                      class="m-0">
+                                    <input type="hidden" name="cartId" value="@item.id" />
+                                    <input type="hidden" name="newQuantity" value="@(item.quantity - 1)" />
+                                    <button type="submit"
+                                            class="btn btn-sm btn-outline-secondary"
+                                    @(item.quantity <= 1 ? "disabled" : "")
+                                            title="Decrease quantity">
+                                        ▼
+                                    </button>
+                                </form>
+
+                                <span class="fw-bold mx-2" style="min-width: 24px; text-align: center;">
+                                    @item.quantity
+                                </span>
+
+                                @* Up arrow - increase quantity *@
+                                <form asp-controller="Customer"
+                                      asp-action="UpdateCartQuantity"
+                                      method="post"
+                                      class="m-0">
+                                    <input type="hidden" name="cartId" value="@item.id" />
+                                    <input type="hidden" name="newQuantity" value="@(item.quantity + 1)" />
+                                    <button type="submit"
+                                            class="btn btn-sm btn-outline-secondary"
+                                    @(item.quantity >= item.maxQuantity ? "disabled" : "")
+                                            title="Increase quantity (max @item.maxQuantity)">
+                                        ▲
+                                    </button>
+                                </form>
+                            </div>
+                            <small class="text-muted d-block text-center mt-1">max: @item.maxQuantity</small>
+                        </td>
                         <td class="text-center">
                             <form asp-controller="Customer"
                                   asp-action="RemoveFromCart"
@@ -59,7 +96,7 @@
             <a asp-controller="Puppy" asp-action="Catalog" class="btn btn-outline-secondary">← Back to Catalog</a>
             <div>
                 <span class="fs-4 fw-bold me-3">Total: $@Model.Sum(i => i.fee * i.quantity)</span>
-                <a asp-controller="Cart" asp-action="Checkout" class="btn btn-lg" style="background-color: #a3965d; color: #fff;">Checkout</a>
+                <a asp-controller="Customer" asp-action="Checkout" class="btn btn-lg" style="background-color: #a3965d; color: #fff;">Checkout</a>
             </div>
         </div>
     }
