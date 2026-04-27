@@ -1,0 +1,40 @@
+﻿<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<h2 style="margin-bottom: 10px;">Dog Parks in Chicago 🌳</h2>
+
+<div id="map" style="height: 600px;"></div>
+
+<script>
+    // console.log("Map script is running");
+
+    var map = L.map('map').setView([41.8781, -87.6298], 11);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    fetch('/Customer/GetDogParks')
+        .then(response => response.json())
+        .then(parks => {
+
+            var bounds = L.latLngBounds([]);
+
+            parks.forEach(function (park) {
+
+                L.marker([park.latitude, park.longitude])
+                    .addTo(map)
+                    .bindPopup(`<b>${park.name}</b><br>Dog Park 🐕`);
+
+                bounds.extend([park.latitude, park.longitude]);
+            });
+
+            if (bounds.isValid()) {
+                map.fitBounds(bounds, {
+                    padding: [40, 40],
+                    maxZoom: 14
+                });
+            }
+        })
+        .catch(error => console.error('Error loading dog parks:', error));
+</script>
