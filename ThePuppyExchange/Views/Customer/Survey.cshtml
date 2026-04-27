@@ -1,0 +1,157 @@
+﻿@{
+    ViewData["Title"] = "Survey";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .survey-wrapper {
+        max-width: 700px;
+        margin: 2rem auto;
+    }
+
+    .survey-title {
+        text-align: center;
+        font-weight: 700;
+        color: #555;
+        margin-bottom: 2.5rem;
+    }
+
+    .survey-question {
+        font-weight: 700;
+        color: #222;
+        margin-bottom: .75rem;
+    }
+
+        .survey-question .hint {
+            font-weight: 400;
+            font-style: italic;
+            color: #777;
+            margin-left: .25rem;
+        }
+
+    .survey-textarea {
+        width: 100%;
+        min-height: 110px;
+        border: 1px solid #bdbdbd;
+        border-radius: 6px;
+        padding: .75rem;
+        resize: vertical;
+    }
+
+    .scale-group {
+        display: flex;
+        gap: .75rem;
+        margin-bottom: 1.75rem;
+    }
+
+    .scale-btn {
+        flex: 1;
+        max-width: 70px;
+        padding: .55rem 0;
+        background: #fff;
+        border: 1px solid #bdbdbd;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color .2s, color .2s, border-color .2s;
+    }
+
+        .scale-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .scale-btn.selected {
+            background: #4a4a4a;
+            color: #fff;
+            border-color: #4a4a4a;
+        }
+
+    .income-options {
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+        margin-bottom: 2rem;
+    }
+
+        .income-options .form-check-label {
+            color: #333;
+        }
+
+    .submit-btn {
+        display: block;
+        margin: 1rem auto 3rem;
+        background: var(--puppy-logo-gold);
+        color: #222;
+        border: none;
+        border-radius: 30px;
+        padding: .65rem 2.25rem;
+        font-weight: 600;
+        box-shadow: 0 2px 4px rgba(0,0,0,.15);
+    }
+
+        .submit-btn:hover {
+            filter: brightness(.95);
+        }
+</style>
+
+<div class="survey-wrapper">
+    <h2 class="survey-title">Puppy Pairing Questionnaire</h2>
+
+    <form asp-controller="Customer" asp-action="Survey" method="post">
+        <div class="mb-4">
+            <label class="survey-question" for="lifestyle">1. Tell us about your lifestyle (Day to Day)</label>
+            <textarea id="lifestyle" name="Lifestyle" class="survey-textarea"></textarea>
+        </div>
+
+        <div class="mb-4">
+            <label class="survey-question" for="household">2. Tell us about your household</label>
+            <textarea id="household" name="Household" class="survey-textarea"></textarea>
+        </div>
+
+        <div>
+            <p class="survey-question">
+                3. Would you say you are a homebody?
+                <span class="hint">1 = Strongly Agree, 5 = Strongly Disagree.</span>
+            </p>
+            <input type="hidden" id="homebodyValue" name="HomebodyRating" />
+            <div class="scale-group" role="group" aria-label="Homebody rating">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    <button type="button" class="scale-btn" data-value="@i">@i</button>
+                }
+            </div>
+        </div>
+
+        <div>
+            <p class="survey-question">4. What is your income range?</p>
+            <div class="income-options">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="IncomeRange" id="income1" value="0-50000">
+                    <label class="form-check-label" for="income1">$0 - $50,000</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="IncomeRange" id="income2" value="50001-100000">
+                    <label class="form-check-label" for="income2">$50,001 - $100,000</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="IncomeRange" id="income3" value="100000+">
+                    <label class="form-check-label" for="income3">$100,000+</label>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="submit-btn">Submit</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.scale-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                document.getElementById('homebodyValue').value = btn.dataset.value;
+            });
+        });
+    </script>
+}

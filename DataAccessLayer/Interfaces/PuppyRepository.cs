@@ -1,11 +1,6 @@
 ﻿using DataAccessLayer.Data;
 using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccessLayer.Interfaces
 {
@@ -23,5 +18,14 @@ namespace DataAccessLayer.Interfaces
             return await puppyDbContext.Puppy.ToListAsync();
         }
 
+        public async Task<IEnumerable<string>> GetUniqueBreedsAsync()
+        {
+            return await puppyDbContext.Puppy
+                .Where(p => p.breed != null && p.breed != "")
+                .Select(p => p.breed)
+                .Distinct()
+                .OrderBy(b => b)
+                .ToListAsync();
+        }
     }
 }
