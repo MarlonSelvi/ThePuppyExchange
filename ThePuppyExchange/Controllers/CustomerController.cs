@@ -1,4 +1,5 @@
-﻿using DataAccessLayer.Data;
+﻿using BusinessLogicLayer;
+using DataAccessLayer.Data;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
@@ -14,17 +15,23 @@ namespace ThePuppyExchange.Controllers
         private readonly PrivilegeDBContext privilegeDBContext;
         private readonly PuppyDbContext puppyDbContext;
         private readonly DogParksDBContext dogParksDBContext;
+        private readonly IGeminiService geminiService;
+        private readonly IPuppyService puppyService;
 
 
         public CustomerController(CustomerDBContext customerDBContext,
         PrivilegeDBContext privilegeDBContext,
         PuppyDbContext puppyDbContext,
-        DogParksDBContext dogParksDBContext)
+        DogParksDBContext dogParksDBContext,
+        IGeminiService geminiService,
+        IPuppyService puppyService)
         {
             this.customerDBContext = customerDBContext;
             this.privilegeDBContext = privilegeDBContext;
             this.puppyDbContext = puppyDbContext;
             this.dogParksDBContext = dogParksDBContext;
+            this.geminiService = geminiService;
+            this.puppyService = puppyService;
         }
         public IActionResult Registration()
         {
@@ -369,6 +376,39 @@ namespace ThePuppyExchange.Controllers
             }).ToList();
 
             return View(orderHistory);
+        }
+        [HttpGet]
+        public IActionResult Survey()
+        {
+            if (HttpContext.Session.GetInt32("CustomerId") == null)
+            {
+                return RedirectToAction("Login", "Customer");
+            }
+
+            ViewData["Title"] = "Customer Survey";
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Survey(SurveyViewModel model)
+        {
+            if (HttpContext.Session.GetString("CustomerId") == null)
+                return RedirectToAction("Login", "Customer");
+
+            var breeds = await puppyService.GetUniqueBreedsAsync();
+
+            var (breed, reasoning) = await geminiService.RecommendBreedAsync(
+                model.Lifestyle,
+                model.Household,
+                model.HomebodyRating,
+                model.IncomeRange,
+                breeds);
+
+            return View("SurveyResult", new SurveyResultViewModel
+            {
+                RecommendedBreed = breed,
+                Reasoning = reasoning
+            });
         }
     }
 }

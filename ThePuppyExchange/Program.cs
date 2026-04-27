@@ -33,8 +33,11 @@ builder.Services.AddDbContext<PrivilegeDBContext>(options => options.UseNpgsql(c
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 
+builder.Services.AddHttpClient<IGeminiService, GeminiService>();
+
 // Allows for session storage of user information for login/logout functionality
 builder.Services.AddSession();
+
 
 var app = builder.Build();
 
