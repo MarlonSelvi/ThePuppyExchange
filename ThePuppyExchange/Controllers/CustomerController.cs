@@ -13,15 +13,18 @@ namespace ThePuppyExchange.Controllers
         private readonly CustomerDBContext customerDBContext;
         private readonly PrivilegeDBContext privilegeDBContext;
         private readonly PuppyDbContext puppyDbContext;
+        private readonly DogParksDBContext dogParksDBContext;
 
 
         public CustomerController(CustomerDBContext customerDBContext,
         PrivilegeDBContext privilegeDBContext,
-        PuppyDbContext puppyDbContext)
+        PuppyDbContext puppyDbContext,
+        DogParksDBContext dogParksDBContext)
         {
             this.customerDBContext = customerDBContext;
             this.privilegeDBContext = privilegeDBContext;
             this.puppyDbContext = puppyDbContext;
+            this.dogParksDBContext = dogParksDBContext;
         }
         public IActionResult Registration()
         {
@@ -141,6 +144,27 @@ namespace ThePuppyExchange.Controllers
          ).ToListAsync();
 
             return View(cartItems);
+        }
+
+        public IActionResult Map()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult GetDogParks()
+        {
+            var parks = dogParksDBContext.DogParks
+                .Select(p => new
+                {
+                    id = p.id,
+                    name = p.name,
+                    latitude = p.lat,
+                    longitude = p.lng
+                })
+                .ToList();
+
+            return Ok(parks);
         }
 
         [HttpPost]
