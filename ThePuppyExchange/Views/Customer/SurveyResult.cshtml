@@ -14,7 +14,9 @@
             @Model.Reasoning
         </p>
 
-        <a asp-controller="Puppy" asp-action="Catalog"
+        <a asp-controller="Puppy"
+           asp-action="Catalog"
+           asp-route-selectedBreed="@Model.RecommendedBreed"
            class="btn mt-3"
            style="background: var(--puppy-logo-gold); color:#222; border-radius:30px; padding:.6rem 2rem; align-self:center;">
             Browse @Model.RecommendedBreed Puppies
