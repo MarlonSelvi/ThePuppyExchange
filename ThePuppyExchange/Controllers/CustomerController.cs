@@ -1,4 +1,5 @@
-﻿using DataAccessLayer.Data;
+﻿using BusinessLogicLayer;
+using DataAccessLayer.Data;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
@@ -14,17 +15,23 @@ namespace ThePuppyExchange.Controllers
         private readonly PrivilegeDBContext privilegeDBContext;
         private readonly PuppyDbContext puppyDbContext;
         private readonly DogParksDBContext dogParksDBContext;
+        private readonly IGeminiService geminiService;
+        private readonly IPuppyService puppyService;
 
 
         public CustomerController(CustomerDBContext customerDBContext,
         PrivilegeDBContext privilegeDBContext,
         PuppyDbContext puppyDbContext,
-        DogParksDBContext dogParksDBContext)
+        DogParksDBContext dogParksDBContext,
+        IGeminiService geminiService,
+        IPuppyService puppyService)
         {
             this.customerDBContext = customerDBContext;
             this.privilegeDBContext = privilegeDBContext;
             this.puppyDbContext = puppyDbContext;
             this.dogParksDBContext = dogParksDBContext;
+            this.geminiService = geminiService;
+            this.puppyService = puppyService;
         }
         public IActionResult Registration()
         {
@@ -83,9 +90,10 @@ namespace ThePuppyExchange.Controllers
                     HttpContext.Session.SetString("CustomerName", customer.fname);
 
                     UserPrivilegeModel user = await privilegeDBContext.AccountPrivileges.FirstOrDefaultAsync(x => x.customer_Id == customer.id);
+
                     if (user == null)
                     {
-                        return RedirectToAction("Catalog", "Puppy");
+                        return RedirectToAction("Home");
                     }
 
                     if (user.privilege == "admin")
@@ -93,10 +101,18 @@ namespace ThePuppyExchange.Controllers
                         HttpContext.Session.SetString("IsAdmin", "true");
                         return RedirectToAction("AdminPanel", "Admin");
                     }
-                    return RedirectToAction("Catalog", "Puppy");
+                    return RedirectToAction("Home");
                 }
             }
-            return RedirectToAction("Home");
+
+            // No match found
+            ModelState.AddModelError(string.Empty, "Incorrect email or password. Please try again.");
+
+            // Clear the password
+            ModelState.Remove(nameof(customerLogin.password));
+            customerLogin.password = string.Empty;
+
+            return View(customerLogin);
         }
 
         [HttpPost]
@@ -196,6 +212,15 @@ namespace ThePuppyExchange.Controllers
 
         public IActionResult AddToCart(int puppyId)
         {
+            int? customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
+            {
+                // redirect to login page with message
+                TempData["LoginMessage"] = "Please log in to add puppies to your cart.";
+                return RedirectToAction("Login", "Customer");
+            }
+
             var cartItem = new CartModel
             {
                 customer_id = HttpContext.Session.GetInt32("CustomerId") ?? 0,
@@ -369,6 +394,39 @@ namespace ThePuppyExchange.Controllers
             }).ToList();
 
             return View(orderHistory);
+        }
+        [HttpGet]
+        public IActionResult Survey()
+        {
+            if (HttpContext.Session.GetInt32("CustomerId") == null)
+            {
+                return RedirectToAction("Login", "Customer");
+            }
+
+            ViewData["Title"] = "Customer Survey";
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Survey(SurveyViewModel model)
+        {
+            if (HttpContext.Session.GetString("CustomerId") == null)
+                return RedirectToAction("Login", "Customer");
+
+            var breeds = await puppyService.GetUniqueBreedsAsync();
+
+            var (breed, reasoning) = await geminiService.RecommendBreedAsync(
+                model.Lifestyle,
+                model.Household,
+                model.HomebodyRating,
+                model.IncomeRange,
+                breeds);
+
+            return View("SurveyResult", new SurveyResultViewModel
+            {
+                RecommendedBreed = breed,
+                Reasoning = reasoning
+            });
         }
     }
 }
