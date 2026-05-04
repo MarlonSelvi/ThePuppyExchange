@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DataAccessLayer.Entities;
+﻿using DataAccessLayer.Entities;
 using DataAccessLayer.Interfaces;
+
 
 namespace BusinessLogicLayer
 {
@@ -17,9 +13,10 @@ namespace BusinessLogicLayer
             this.puppyReposityory = puppyRepository;
         }
 
-        public async Task<IEnumerable<PuppyModel>> GetPuppyModelsAsync()
-        {
-            return await puppyReposityory.GetPuppyModelsAsync();
-        }
+        public Task<IEnumerable<PuppyModel>> GetPuppyModelsAsync()
+            => puppyReposityory.GetPuppyModelsAsync();
+
+        public Task<IEnumerable<string>> GetUniqueBreedsAsync()
+            => puppyReposityory.GetUniqueBreedsAsync();
     }
 }

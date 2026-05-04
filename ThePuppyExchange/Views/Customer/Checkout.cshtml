@@ -8,77 +8,122 @@
 
 <div class="container py-5">
 
-    <h1 class="mb-4" style="font-family: 'Times New Roman', Times, serif;">
+    <h1 class="mb-4 fw-bold" style="font-family: 'Segoe UI', sans-serif;">
         Checkout
     </h1>
 
-    <div class="row">
+    <div class="row g-4">
+
+        <!-- billing info -->
         <div class="col-md-6">
-            <h4 class="mb-3">Billing Information</h4>
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
 
-            <form asp-controller="Customer" asp-action="PlaceOrder" method="post">
+                    <h4 class="mb-4">Billing Information</h4>
 
-                <div class="mb-3">
-                    <label class="form-label">Full Name</label>
-                    <input type="text" name="FullName" class="form-control" required />
-                </div>
+                    <form asp-controller="Customer" asp-action="PlaceOrder" method="post">
 
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" name="Email" class="form-control" required />
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Address</label>
-                    <input type="text" name="Address" class="form-control" required />
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">City</label>
-                    <input type="text" name="City" class="form-control" required />
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Card Number</label>
-                    <input type="text" name="CardNumber" class="form-control" required />
-                </div>
-
-                <button type="submit" class="btn btn-lg mt-3"
-                        style="background-color: #a3965d; color: #fff;">
-                    Place Order
-                </button>
-            </form>
-        </div>
-
-
-        <div class="col-md-6">
-            <h4 class="mb-3">Order Summary</h4>
-
-            <ul class="list-group mb-3">
-                @foreach (var item in Model)
-
-                {
-                    <li class="list-group-item d-flex justify-content-between">
-                        <div>
-                            <h6 class="my-0">@item.name</h6>
-                            <small class="text-muted">Qty: @item.quantity</small>
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" name="FullName" class="form-control" required />
                         </div>
-                        <span class="text-success">
-                            $@(item.fee * item.quantity)
-                        </span>
-                    </li>
-                }
 
-                <li class="list-group-item d-flex justify-content-between">
-                    <strong>Total</strong>
-                    <strong>$@total</strong>
-                </li>
-            </ul>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="Email" class="form-control" required />
+                        </div>
 
-            <a asp-controller="Customer" asp-action="Cart"
-               class="btn btn-outline-secondary w-100">
-                ← Back to Cart
-            </a>
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <input type="text" name="Address" class="form-control" required />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">City</label>
+                                <input type="text" name="City" class="form-control" required />
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Postal Code</label>
+                                <input type="text" name="PostalCode" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Card Number</label>
+                            <input type="text" name="CardNumber"
+                                   class="form-control"
+                                   placeholder="•••• •••• •••• ••••"
+                                   required />
+                        </div>
+
+                        <!-- place order -->
+                        <button type="submit"
+                                class="btn w-100 py-2 mt-3"
+                                style="background-color: #a3965d; color: #fff; font-weight: 600;">
+                            Place Order
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
         </div>
+
+        <!-- order info -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+
+                    <h4 class="mb-4">Order Summary</h4>
+
+                    <div class="list-group list-group-flush mb-3">
+
+                        @foreach (var item in Model)
+
+                        {
+                            <div class="list-group-item px-0 py-3">
+
+                                <div class="d-flex align-items-center gap-3">
+
+                                    <img src="@item.profile_pic"
+                                         alt="@item.name"
+                                         style="width: 70px; height: 70px; object-fit: cover; border-radius: 10px;" />
+
+                                    <div class="flex-grow-1">
+                                        <div class="fw-bold">@item.name</div>
+                                        <div class="text-muted small">@item.breed</div>
+                                        <div class="text-muted small">Qty: @item.quantity</div>
+                                    </div>
+
+                                    <div class="fw-semibold text-end">
+                                        $@(item.fee * item.quantity)
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+
+                    <hr />
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="fs-5 fw-bold">Total</span>
+                        <span class="fs-5 fw-bold text-success">$@total</span>
+                    </div>
+
+                    <a asp-controller="Customer" asp-action="Cart"
+                       class="btn btn-outline-secondary w-100">
+                        ← Back to Cart
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+
     </div>
 </div>

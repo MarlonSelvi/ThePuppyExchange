@@ -21,6 +21,11 @@ builder.Services.AddScoped<IPuppyService, PuppyService>();
 // Adds DB Access for customer information in remote postgresql database
 builder.Services.AddDbContext<CustomerDBContext>(options => options.UseNpgsql(connectionString));
 
+// Adds DB Access for dog parks in Chicago
+builder.Services.AddDbContext<DogParksDBContext>(options => options.UseNpgsql(connectionString));
+
+builder.Services.AddScoped<IDogParksRepository, DogParksRepository>();
+builder.Services.AddScoped<IDogParksService, DogParksService>();
 
 // Adds DB Access for user privilege information in remote postgresql database
 builder.Services.AddDbContext<PrivilegeDBContext>(options => options.UseNpgsql(connectionString));
@@ -28,8 +33,11 @@ builder.Services.AddDbContext<PrivilegeDBContext>(options => options.UseNpgsql(c
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 
+builder.Services.AddHttpClient<IGeminiService, GeminiService>();
+
 // Allows for session storage of user information for login/logout functionality
 builder.Services.AddSession();
+
 
 var app = builder.Build();
 
