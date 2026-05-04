@@ -47,21 +47,36 @@
 
             <div class="mt-auto">
 
-                <form asp-controller="Customer"
-                      asp-action="AddToCart"
-                      asp-route-id="@Model.product_id"
-                      method="post">
+                @{
+                    bool isLoggedIn = Context.Session.GetInt32("CustomerId") != null;
+                }
 
-                    <input type="hidden"
-                           name="puppyId"
-                           value="@Model.product_id" />
+                @if (isLoggedIn)
+                {
+                    <form asp-controller="Customer"
+                          asp-action="AddToCart"
+                          asp-route-id="@Model.product_id"
+                          method="post">
 
-                    <button type="submit"
-                            class="btn btn-primary btn-lg w-100 mb-2"
-                    @(Model.quantity <= 0 ? "disabled" : "")>
-                        @(Model.quantity > 0 ? "Add to Cart" : "Out of Stock")
-                    </button>
-                </form>
+                        <input type="hidden"
+                               name="puppyId"
+                               value="@Model.product_id" />
+
+                        <button type="submit"
+                                class="btn btn-primary btn-lg w-100 mb-2"
+                        @(Model.quantity <= 0 ? "disabled" : "")>
+                            @(Model.quantity > 0 ? "Add to Cart" : "Out of Stock")
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-controller="Customer"
+                       asp-action="Login"
+                       class="btn btn-primary btn-lg w-100 mb-2">
+                        Log in to Add to Cart
+                    </a>
+                }
 
                 <a asp-controller="Puppy"
                    asp-action="Catalog"

@@ -90,9 +90,10 @@ namespace ThePuppyExchange.Controllers
                     HttpContext.Session.SetString("CustomerName", customer.fname);
 
                     UserPrivilegeModel user = await privilegeDBContext.AccountPrivileges.FirstOrDefaultAsync(x => x.customer_Id == customer.id);
+
                     if (user == null)
                     {
-                        return RedirectToAction("Catalog", "Puppy");
+                        return RedirectToAction("Home");
                     }
 
                     if (user.privilege == "admin")
@@ -100,10 +101,18 @@ namespace ThePuppyExchange.Controllers
                         HttpContext.Session.SetString("IsAdmin", "true");
                         return RedirectToAction("AdminPanel", "Admin");
                     }
-                    return RedirectToAction("Catalog", "Puppy");
+                    return RedirectToAction("Home");
                 }
             }
-            return RedirectToAction("Home");
+
+            // No match found
+            ModelState.AddModelError(string.Empty, "Incorrect email or password. Please try again.");
+
+            // Clear the password
+            ModelState.Remove(nameof(customerLogin.password));
+            customerLogin.password = string.Empty;
+
+            return View(customerLogin);
         }
 
         [HttpPost]
@@ -203,6 +212,15 @@ namespace ThePuppyExchange.Controllers
 
         public IActionResult AddToCart(int puppyId)
         {
+            int? customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
+            {
+                // redirect to login page with message
+                TempData["LoginMessage"] = "Please log in to add puppies to your cart.";
+                return RedirectToAction("Login", "Customer");
+            }
+
             var cartItem = new CartModel
             {
                 customer_id = HttpContext.Session.GetInt32("CustomerId") ?? 0,
